@@ -1,7 +1,8 @@
 myApp
 .directive('sliderButton', function($document) {
   function link(scope, element, attrs) {
-    var percent = scope.percent;
+    var percent = scope.percent
+      , position = 0;
 
     element.css({
       'background-color': '#efefef'
@@ -22,21 +23,22 @@ myApp
     function stopInteraction() {
       $document.off('mousemove', lateralMove);
       $document.off('mouseup', stopInteraction);
-      scope.percent = percent;
+      scope.percent = Math.round((position / scope.containerWidth) * 100);
       scope.$apply();
     }
 
     function lateralMove(event) {
       event.preventDefault();
-      percent = Math.ceil((event.pageX / scope.rightBoundary) * 100);
 
-      if (percent <= 0) {
-        percent = 0;
-      } else if(percent >= 100) {
-        percent = 100;
+      if (event.pageX <= scope.leftBoundary) {
+        position = 0;
+      } else if(event.pageX >= scope.rightBoundary) {
+        position = scope.containerWidth;
+      } else {
+        position = (event.pageX % scope.leftBoundary);
       }
 
-      element.css('left', percent + '%');
+      element.css('left', position + 'px');
     }
   }
 
@@ -57,6 +59,7 @@ myApp
     , 'box-shadow': '2px 2px 2px #f2f2f2 inset'
     , 'position': 'relative'
     , 'width': '200px'
+    , 'margin-left': '200px'
     });
 
     scope.containerWidth = element.prop('offsetWidth');
