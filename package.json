@@ -9,5 +9,6 @@
 , "devDependencies": {
     "gulp": "3.8.x"
   , "gulp-watch": "0.6.x"
+  , "gulp-concat": "2.3.x"
   }
 }
